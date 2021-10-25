@@ -19,16 +19,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class VacanciesRepositoryAPIImpl implements VacanciesRepository{
-    private static final String[] paramsForInit = {"experience", "employment", "schedule"};
-    private static final String[] paramsForReq = {"text", "salary", "onlyWithSalary"};
+    private static final String[] params = {"experience", "employment", "schedule", "text", "salary", "only_with_salary"};
     private final String LINK = "https://hh.ru/vacancy/" ;
-    private JsonObject vacanciesData;
 
     @Override
     public Optional<List<Vacancy>> getVacanciesByParam(Vacancy vacancy) throws ConnectionLostException, WrongVacancyParamException {
-        if(vacanciesData == null){
-            vacanciesData = getVacanciesData(vacancy);
-        }
+        JsonObject vacanciesData = getVacanciesData(vacancy);
         return Optional.of(getVacanciesFromJsonObject(vacanciesData));
     }
 
@@ -48,8 +44,6 @@ public class VacanciesRepositoryAPIImpl implements VacanciesRepository{
         JsonArray vacArr = vacanciesData.getAsJsonArray("items");
         for(JsonElement vacItem : vacArr) {
             String areaStr = null;
-            String from = null;
-            String to = null;
             String requirement = null;
             String responsibility = null;
             String scheduleStr = null;
@@ -64,11 +58,7 @@ public class VacanciesRepositoryAPIImpl implements VacanciesRepository{
             }
 
             JsonObject salary = getAsJsonObject(vacItemObj, "salary");
-            if(salary != null) {
-                from = getAsString(salary, "from");
-                to = getAsString(salary, "to");
-            }
-            String salaryStr = from + "-" + to;
+            String salaryStr = getSalary(salary);
 
             JsonObject snippet = getAsJsonObject(vacItemObj, "snippet");
             if(snippet != null){
@@ -88,19 +78,20 @@ public class VacanciesRepositoryAPIImpl implements VacanciesRepository{
     }
 
     private String getRequestParam(Vacancy vacancy) throws WrongVacancyParamException {
-        List<String> params = new ArrayList<>();
-        Collections.addAll(params, paramsForReq);
-        Collections.addAll(params, paramsForInit);
-
+        if(vacancy == null){
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         Class vacancyClass = vacancy.getClass();
 
         for(String param: params) {
             try {
-                Field field = vacancyClass.getDeclaredField(param);
+                Field field = param.equals("only_with_salary")?
+                        vacancyClass.getDeclaredField("onlyWithSalary"): vacancyClass.getDeclaredField(param);
                 field.setAccessible(true);
                 String value = String.valueOf(field.get(vacancy));
                 if (value != null && !value.equals("null") && !value.equals("")) {
+                    System.out.println(value);
                     sb.append(param)
                             .append("=")
                             .append(URLEncoder.encode(value, StandardCharsets.UTF_8))
@@ -111,6 +102,24 @@ public class VacanciesRepositoryAPIImpl implements VacanciesRepository{
             }
         }
         return sb.toString();
+    }
+
+    private String getSalary(JsonObject salary){
+        String from = null;
+        String to = null;
+        if(salary != null) {
+            from = getAsString(salary, "from");
+            to = getAsString(salary, "to");
+        }
+        if(from == null && to == null){
+            return "не указана";
+        } else if(from == null){
+            return "до " + to + "руб.";
+        } else if(to == null){
+            return "с " + from + "руб.";
+        } else {
+            return from + "-" + to + "руб.";
+        }
     }
 
     private String getAsString(JsonObject object, String str){

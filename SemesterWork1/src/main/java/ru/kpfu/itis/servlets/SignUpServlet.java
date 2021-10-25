@@ -35,9 +35,8 @@ public class SignUpServlet extends HttpServlet {
         Account account = new Account(firstName, lastName, email, password);
         if(email != null) {
             if(securityService.isExist(email)) {
-                System.out.println("bjfnfhb");
                 request.setAttribute("emailTip", MESS_USER_EXIST);
-            } else if(securityService.isValid(request, account)) {
+            } else if(securityService.isValidAccount(request, account)) {
                 this.securityService.signUp(account);
                 response.sendRedirect(request.getContextPath() + "/signIn");
                 return;

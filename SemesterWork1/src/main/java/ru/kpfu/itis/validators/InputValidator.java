@@ -6,4 +6,6 @@ public interface InputValidator {
     String checkEmail(String email);
     String checkDate(String date);
     String checkName(String name);
+    String checkWords(String words);
+    String checkNum(String num);
 }

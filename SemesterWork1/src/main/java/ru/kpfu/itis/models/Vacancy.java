@@ -3,7 +3,6 @@ package ru.kpfu.itis.models;
 import java.util.StringJoiner;
 
 public class Vacancy {
-    private Integer id;
     private Integer number;
     private String name;
     private String text;
@@ -13,12 +12,12 @@ public class Vacancy {
     private String employment; //тип занятости
     private String schedule;
     private String salary;
-    private String onlyWithSalary;
+    private boolean onlyWithSalary;
     private String requirement;
     private String responsibility;
     private String link;
 
-    public Vacancy(String text, String experience, String employment, String schedule, String salary, String onlyWithSalary) {
+    public Vacancy(String text, String salary, String experience, String employment, String schedule, boolean onlyWithSalary) {
         this.text = text;
         this.experience = experience;
         this.employment = employment;
@@ -39,11 +38,11 @@ public class Vacancy {
         this.link = link;
     }
 
-    public Vacancy(){}
-
-    public Integer getId() {
-        return id;
+    public Vacancy(Integer number) {
+        this.number = number;
     }
+
+    public Vacancy(){}
 
     public Integer getNumber() {
         return number;
@@ -81,7 +80,7 @@ public class Vacancy {
         return salary;
     }
 
-    public String getOnlyWithSalary() {
+    public boolean getOnlyWithSalary() {
         return onlyWithSalary;
     }
 
@@ -104,7 +103,6 @@ public class Vacancy {
     @Override
     public String toString() {
         return new StringJoiner(", ", Vacancy.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
                 .add("number=" + number)
                 .add("name='" + name + "'")
                 .add("text='" + text + "'")

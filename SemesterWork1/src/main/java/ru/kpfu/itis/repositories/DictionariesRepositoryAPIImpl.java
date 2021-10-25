@@ -16,7 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DictionariesRepositoryAPIImpl implements DictionariesRepository{
-    private JsonObject dictionariesData;
 
     @Override
     public Map<String, String> getExperience() throws ConnectionLostException {
@@ -34,9 +33,7 @@ public class DictionariesRepositoryAPIImpl implements DictionariesRepository{
     }
 
     private Map<String, String> getDictionaries(String dictionaryName) throws ConnectionLostException {
-        if(dictionariesData == null) {
-            dictionariesData = getDictionariesData();
-        }
+        JsonObject  dictionariesData = getDictionariesData();
         Map<String, String> dictionary = new LinkedHashMap<>();
         JsonArray dictionariesArray = dictionariesData.getAsJsonArray(dictionaryName);
         if(dictionariesArray != null) {
@@ -56,7 +53,7 @@ public class DictionariesRepositoryAPIImpl implements DictionariesRepository{
 
     private JsonObject getDictionariesData() throws ConnectionLostException {
         URLConnection conn = APIWrapper.getDictionariesConn();
-        try{BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))){;
             Gson gson = new Gson();
             return gson.fromJson(reader, JsonObject.class);
         }

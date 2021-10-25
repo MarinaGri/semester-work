@@ -9,6 +9,8 @@ private final String emailReg = "^([\\w!#$%&'*+\\/=?^_`\\-{|}~]+|\"" +
         "[\\w!#$%&'*+\\/=?^_`{|}~\\.]*@\\w+(\\w\\-)*\\.([A-Za-z]+)$";
 private final String dateReg = "^(?:[0-2][0-9]|3[0-1])\\.(?:0[0-9]|1[0-2])\\.(?:19[0-9][0-9]|20[0-1][0-9]|202[0-1])$";
 private final String nameReg = "[A-Za-zА-Яа-я_0-9]{2,}";
+private final String wordsReg = "[A-Za-zА-Яа-я_0-9 ]*";
+private final String numReg = "[0-9]*";
 
     @Override
     public String checkPassword(String password) {
@@ -58,6 +60,32 @@ private final String nameReg = "[A-Za-zА-Яа-я_0-9]{2,}";
         Matcher matcher = pattern.matcher(name);
         if(!matcher.matches()){
             return "Name can only contain letters, numbers or symbol \"_\"";
+        }
+        return null;
+    }
+
+    @Override
+    public String checkWords(String words) {
+        if(words == null){
+            return null;
+        }
+        Pattern pattern = Pattern.compile(wordsReg);
+        Matcher matcher = pattern.matcher(words);
+        if(!matcher.matches()){
+            return "Field can only contain letters, numbers or symbol \"_\"";
+        }
+        return null;
+    }
+
+    @Override
+    public String checkNum(String num) {
+        if(num == null || num.equals("")){
+            return null;
+        }
+        Pattern pattern = Pattern.compile(nameReg);
+        Matcher matcher = pattern.matcher(num);
+        if(!matcher.matches()){
+            return "Field can only contain numbers";
         }
         return null;
     }

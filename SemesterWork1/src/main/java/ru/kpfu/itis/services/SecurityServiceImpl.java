@@ -58,7 +58,7 @@ public class SecurityServiceImpl implements SecurityService{
     }
 
     @Override
-    public boolean isValid(HttpServletRequest request, Account account) {
+    public boolean isValidAccount(HttpServletRequest request, Account account) {
         String passRes = inputValidator.checkPassword(account.getPassword());
         String emailRes = inputValidator.checkEmail(account.getEmail());
         String firstNameRes = inputValidator.checkName(account.getFirstName());
@@ -69,5 +69,16 @@ public class SecurityServiceImpl implements SecurityService{
         request.setAttribute("firstNameTip", firstNameRes);
         request.setAttribute("lastNameTip", lastNameRes);
         return passRes == null && emailRes == null && firstNameRes == null && lastNameRes == null;
+    }
+
+    @Override
+    public boolean isValidSearchData(HttpServletRequest request, String keywords, String num) {
+        String keywordsRes = inputValidator.checkWords(keywords);
+        String numRes = inputValidator.checkNum(num);
+
+        request.setAttribute("keywordTip", keywordsRes);
+        request.setAttribute("salaryTip", numRes);
+        return keywordsRes == null && numRes == null;
+
     }
 }

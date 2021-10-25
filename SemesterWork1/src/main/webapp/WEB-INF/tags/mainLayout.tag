@@ -1,7 +1,7 @@
 <%@tag description="Default Layout Tag" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@attribute name="title" required="true"%>
-<%@attribute name="css" required="true"%>
+<%@attribute name="title" required="true" type="java.lang.String"%>
+<%@attribute name="css" required="true" type="java.lang.String"%>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
 <body>
 <div class="wrapper">
     <div class="header">
-        kkdjksjdvbkjsbvks ${css}
+        kkdjksjdvbkjsbvks
         <div class="icon-group">
             <img class="icon" src="<c:url value='/img/svg/person-fill.svg'/>">
         </div>

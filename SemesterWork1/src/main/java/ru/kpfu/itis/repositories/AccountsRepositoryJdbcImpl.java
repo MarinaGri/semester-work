@@ -4,10 +4,7 @@ import ru.kpfu.itis.exceptions.DbException;
 import ru.kpfu.itis.models.Account;
 import ru.kpfu.itis.utils.DbWrapper;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,15 +26,22 @@ public class AccountsRepositoryJdbcImpl implements AccountsRepository {
     public void save(Account account) throws DbException {
         Connection conn = DbWrapper.getConnection();
         try {
-            PreparedStatement statement = conn.prepareStatement(SQL_INSERT);
+            PreparedStatement statement = conn.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
             int i = 1;
             statement.setString(i++, account.getFirstName());
             statement.setString(i++, account.getLastName());
             statement.setString(i++, account.getEmail());
             statement.setString(i++, account.getPassword());
             statement.execute();
+            ResultSet rs = statement.getGeneratedKeys ();
+            Integer id = null;
+            while(rs.next()){
+                id = rs.getInt(1);
+            }
+            account.setId(id);
+            System.out.println(account);
         } catch (SQLException ex) {
-            throw new DbException();
+            throw new DbException("Connection to db failed", ex);
         }
     }
 
@@ -52,7 +56,7 @@ public class AccountsRepositoryJdbcImpl implements AccountsRepository {
                 return Optional.of(accountRowMapper.apply(res));
             }
         } catch (SQLException|IllegalArgumentException ex) {
-            throw new DbException();
+            throw new DbException("Connection to db failed", ex);
         }
         return Optional.empty();
     }
@@ -67,7 +71,7 @@ public class AccountsRepositoryJdbcImpl implements AccountsRepository {
                 accounts.add(accountRowMapper.apply(res));
             }
         } catch (SQLException ex) {
-            throw new DbException();
+            throw new DbException("Connection to db failed", ex);
         }
         return Optional.of(accounts);
     }

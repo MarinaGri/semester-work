@@ -97,7 +97,8 @@ form{
 }
 
 .button{
-    width: 100%;
+    width: 30%;
+    margin-left: 35%;
     font-size: 1.3rem;
     background-color: #9b4447;
     color: white;
