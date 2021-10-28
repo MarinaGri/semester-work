@@ -1,9 +1,6 @@
 package ru.kpfu.itis.listeners;
 
-import ru.kpfu.itis.repositories.AccountsRepositoryJdbcImpl;
-import ru.kpfu.itis.repositories.CommentsRepositoryJdbcImpl;
-import ru.kpfu.itis.repositories.DictionariesRepositoryAPIImpl;
-import ru.kpfu.itis.repositories.VacanciesRepositoryAPIImpl;
+import ru.kpfu.itis.repositories.*;
 import ru.kpfu.itis.services.PublicationService;
 import ru.kpfu.itis.services.SecurityServiceImpl;
 import ru.kpfu.itis.services.VacanciesService;
@@ -23,7 +20,7 @@ public class Loader implements ServletContextListener {
         sce.getServletContext().setAttribute("vacanciesService",
                 new VacanciesService(new VacanciesRepositoryAPIImpl(), new DictionariesRepositoryAPIImpl()));
         sce.getServletContext().setAttribute("publicationService",
-                new PublicationService(new CommentsRepositoryJdbcImpl()));
+                new PublicationService(new CommentsRepositoryJdbcImpl(), new PostsRepositoryJdbcImpl()));
     }
 
     @Override

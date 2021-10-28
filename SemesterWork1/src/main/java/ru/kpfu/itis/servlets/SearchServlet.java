@@ -38,16 +38,15 @@ public class SearchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setDictionaries(request);
-
         Vacancy vacancy = getVacancy(request);
+
+        postComment(request);
 
         if(vacancy != null) {
             setVacancies(request, vacancy);
         }
 
-        postComment(request);
-
+        setDictionaries(request);
         request.getRequestDispatcher("WEB-INF/jsp/search.jsp").forward(request, response);
     }
 
@@ -85,35 +84,33 @@ public class SearchServlet extends HttpServlet {
         }
     }
 
-    private void setComments(HttpServletRequest request, List<Vacancy> vacancies){
-        List<Comment> comments = new ArrayList<>();
-        for(Vacancy vacancy: vacancies){
-            List<Comment> commentList = publicationService.getCommentsByNumVacancy(vacancy.getNumber());
+    private void setComments(List<Vacancy> vacancies){
+        for(int i = 0; i < vacancies.size(); i++){
+            List<Comment> commentList = publicationService.getCommentsByNumVacancy(vacancies.get(i).getNumber());
             if(commentList != null) {
-                comments.addAll(commentList);
+                vacancies.get(i).setComments(commentList);
             }
         }
-        request.setAttribute("comments", comments);
     }
 
     private void setVacancies(HttpServletRequest request, Vacancy vacancy){
         List<Vacancy> vacancies = vacanciesService.getVacancies(vacancy);
-        setComments(request, vacancies);
+        setComments(vacancies);
         request.setAttribute("vacancies", vacancies);
     }
 
     private void postComment(HttpServletRequest request){
         String numStr = request.getParameter("numVacancy");
         if(numStr != null) {
-            Comment comment = new Comment(request.getParameter("comment"), new Vacancy(Integer.parseInt(numStr)));
+            Comment comment = new Comment(request.getParameter("comment"), Integer.parseInt(numStr));
             publicationService.postComment(comment);
         }
     }
 
     private Vacancy getVacancy(HttpServletRequest request){
         Vacancy vacancy = null;
-        HttpSession session = request.getSession(true);
-        if(request.getParameter("keyword") != null){
+        HttpSession session = request.getSession(false);
+        if(request.getParameter("sent") != null){
             vacancy = getVacancyFromRequest(request);
             session.setAttribute("vacancy", vacancy);
             for(String param: params){

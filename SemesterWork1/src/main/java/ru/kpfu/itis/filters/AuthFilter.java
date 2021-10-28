@@ -24,18 +24,22 @@ public class AuthFilter implements Filter {
         HttpSession session = request.getSession(false);
         String contextPath = request.getContextPath();
 
-        boolean isSecretPage = request.getRequestURI().equals(contextPath + "/profile");
+        boolean isSecretPage = request.getRequestURI().equals(contextPath + "/profile") ||
+                request.getRequestURI().equals(contextPath + "/search");
         boolean isAuthenticated = false;
+        boolean isStaticResource = request.getRequestURI().startsWith(contextPath +"/css/") ||
+                request.getRequestURI().startsWith(contextPath +"/img/");
 
         if (session != null) {
             isAuthenticated = session.getAttribute("isAuthenticated") != null;
         }
-        if (isAuthenticated && isSecretPage || !isAuthenticated && !isSecretPage) {
-            filterChain.doFilter(request, response);
-        } else if (isAuthenticated) {
+
+        if (!isAuthenticated && isSecretPage && !isStaticResource) {
+             response.sendRedirect(contextPath + "/signIn");
+        } else if (isAuthenticated && !isSecretPage  && !isStaticResource) {
             response.sendRedirect(contextPath + "/profile");
         } else {
-            response.sendRedirect(contextPath + "/signIn");
+             filterChain.doFilter(request, response);
         }
     }
 

@@ -1,5 +1,6 @@
 package ru.kpfu.itis.models;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -68,6 +69,10 @@ public class Account {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
+
+
 
     @Override
     public boolean equals(Object o) {

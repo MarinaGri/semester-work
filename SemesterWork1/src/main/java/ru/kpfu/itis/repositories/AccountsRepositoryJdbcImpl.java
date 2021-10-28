@@ -4,6 +4,7 @@ import ru.kpfu.itis.exceptions.DbException;
 import ru.kpfu.itis.models.Account;
 import ru.kpfu.itis.utils.DbWrapper;
 
+import javax.crypto.spec.PSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,73 +22,42 @@ public class AccountsRepositoryJdbcImpl implements AccountsRepository {
     private final String SQL_INSERT = "insert into account(first_name, last_name, email, password) " +
             "values (?, ?, ?, ?)";
 
+    private final SimpleJdbcTemplate simpleJdbcTemplate;
+
+    private final RowMapper<Account> rowMapper = resultSet -> {
+        int id = resultSet.getInt("id");
+        String firstName = resultSet.getString("first_name");
+        String lastName = resultSet.getString("last_name");
+        String email = resultSet.getString("email");
+        String password = resultSet.getString("password");
+        return new Account(id, firstName, lastName, email, password);
+    };
+
+    public AccountsRepositoryJdbcImpl() {
+        this.simpleJdbcTemplate = new SimpleJdbcTemplate();
+    }
 
     @Override
     public void save(Account account) throws DbException {
-        Connection conn = DbWrapper.getConnection();
-        try {
-            PreparedStatement statement = conn.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
-            int i = 1;
-            statement.setString(i++, account.getFirstName());
-            statement.setString(i++, account.getLastName());
-            statement.setString(i++, account.getEmail());
-            statement.setString(i++, account.getPassword());
-            statement.execute();
-            ResultSet rs = statement.getGeneratedKeys ();
-            Integer id = null;
-            while(rs.next()){
-                id = rs.getInt(1);
-            }
+        int id = simpleJdbcTemplate.update(SQL_INSERT, account.getFirstName(),
+                account.getLastName(), account.getEmail(), account.getPassword());
+        if(id != -1){
             account.setId(id);
-            System.out.println(account);
-        } catch (SQLException ex) {
-            throw new DbException("Connection to db failed", ex);
         }
     }
 
     @Override
     public Optional<Account> findByEmail(String email) throws DbException {
-        Connection conn = DbWrapper.getConnection();
-        try {
-            PreparedStatement statement = conn.prepareStatement(SQL_SELECT_BY_EMAIL);
-            statement.setString(1, email);
-            ResultSet res = statement.executeQuery();
-            if(res.next()){
-                return Optional.of(accountRowMapper.apply(res));
-            }
-        } catch (SQLException|IllegalArgumentException ex) {
-            throw new DbException("Connection to db failed", ex);
+        List<Account> accounts = simpleJdbcTemplate.query(SQL_SELECT_BY_EMAIL, rowMapper, email);
+        if(accounts.size() != 0){
+            return Optional.of(accounts.get(0));
         }
         return Optional.empty();
     }
 
     @Override
     public Optional<List<Account>> findAll() throws DbException {
-        List<Account> accounts = new ArrayList<>();
-        Connection conn = DbWrapper.getConnection();
-        try {
-            ResultSet res = conn.createStatement().executeQuery(SQL_SELECT_ALL);
-            while(res.next()){
-                accounts.add(accountRowMapper.apply(res));
-            }
-        } catch (SQLException ex) {
-            throw new DbException("Connection to db failed", ex);
-        }
+        List<Account> accounts = simpleJdbcTemplate.query(SQL_SELECT_ALL, rowMapper);
         return Optional.of(accounts);
     }
-
-    private final Function<ResultSet, Account> accountRowMapper = row -> {
-        try {
-            int id = row.getInt("id");
-            String firstName = row.getString("first_name");
-            String lastName = row.getString("last_name");
-            String email = row.getString("email");
-            String password = row.getString("password");
-
-            return new Account(id, firstName, lastName, email, password);
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
-        }
-    };
-
 }

@@ -13,7 +13,6 @@ import java.util.Optional;
 public class VacanciesService {
     private final VacanciesRepository vacanciesRepository;
     private final DictionariesRepository dictionariesRepository;
-    private final String LINK = "https://hh.ru/vacancy/" ;
 
     public VacanciesService(VacanciesRepository vacanciesRepository, DictionariesRepository dictionariesRepository){
         this.vacanciesRepository = vacanciesRepository;
@@ -52,9 +51,5 @@ public class VacanciesService {
         } catch (ConnectionLostException | WrongVacancyParamException e) {
             throw new IllegalArgumentException(e);
         }
-    }
-
-    public String getLink(int number){
-        return LINK + number;
     }
 }

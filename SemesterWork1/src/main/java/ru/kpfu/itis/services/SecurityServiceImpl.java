@@ -38,14 +38,14 @@ public class SecurityServiceImpl implements SecurityService{
     }
 
     @Override
-    public boolean isExist(String email) {
+    public Account isExist(String email) {
         Optional<Account> accountOptional;
         try {
             accountOptional = accountsRepository.findByEmail(email);
         } catch (DbException e) {
             throw new IllegalArgumentException(e);
         }
-        return accountOptional.isPresent();
+        return accountOptional.orElse(null);
     }
 
     @Override

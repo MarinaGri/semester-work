@@ -15,10 +15,10 @@
                             <b>Требования:</b> ${vacancy.requirement}<br>
                             <b>Обязанности:</b> ${vacancy.responsibility}<br>
                         </div>
-                        <c:if test="${comments != null && comments.size() != 0 && comments.get(0) != null
-                                && vacancy.number == comments.get(0).vacancy.number}">
+                        <c:if test="${vacancy.comments != null && vacancy.comments.size() != 0 && vacancy.comments.get(0) != null
+                                && vacancy.number == vacancy.comments.get(0).numVacancy}">
                             <b>Комментарии: </b><br>
-                            <c:forEach items="${comments}" var="comment">
+                            <c:forEach items="${vacancy.comments}" var="comment">
                                 <div class="comment">
                                     ${comment.text}<br>
                                 </div>
@@ -59,7 +59,7 @@
                             name="onlyWithSalary" type="checkbox" id="exampleCheck1">
                     <label class="form-check-label" for="exampleCheck1">Показывать только с указанной зарплатой</label>
                 </div>
-                <button type="submit" class="button">Поиск</button>
+                <button type="submit" name="sent" value="Поиск" class="button">Поиск</button>
             </form>
         </div>
     </div>

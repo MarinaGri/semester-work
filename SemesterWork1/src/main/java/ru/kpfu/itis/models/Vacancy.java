@@ -1,12 +1,12 @@
 package ru.kpfu.itis.models;
 
+import java.util.List;
 import java.util.StringJoiner;
 
 public class Vacancy {
     private Integer number;
     private String name;
     private String text;
-    private String searchField;
     private String area;
     private String experience;
     private String employment; //тип занятости
@@ -16,6 +16,7 @@ public class Vacancy {
     private String requirement;
     private String responsibility;
     private String link;
+    private List<Comment> comments;
 
     public Vacancy(String text, String salary, String experience, String employment, String schedule, boolean onlyWithSalary) {
         this.text = text;
@@ -38,10 +39,6 @@ public class Vacancy {
         this.link = link;
     }
 
-    public Vacancy(Integer number) {
-        this.number = number;
-    }
-
     public Vacancy(){}
 
     public Integer getNumber() {
@@ -54,10 +51,6 @@ public class Vacancy {
 
     public String getText() {
         return text;
-    }
-
-    public String getSearchField() {
-        return searchField;
     }
 
     public String getArea() {
@@ -100,13 +93,20 @@ public class Vacancy {
         this.link = link;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", Vacancy.class.getSimpleName() + "[", "]")
                 .add("number=" + number)
                 .add("name='" + name + "'")
                 .add("text='" + text + "'")
-                .add("searchField='" + searchField + "'")
                 .add("area='" + area + "'")
                 .add("experience='" + experience + "'")
                 .add("employment='" + employment + "'")
@@ -115,6 +115,7 @@ public class Vacancy {
                 .add("onlyWithSalary='" + onlyWithSalary + "'")
                 .add("requirement='" + requirement + "'")
                 .add("responsibility='" + responsibility + "'")
+                .add("comments" + comments)
                 .toString();
     }
 }

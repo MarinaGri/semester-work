@@ -37,7 +37,7 @@ public class SignInServlet extends HttpServlet {
             if (securityService.isSignIn(account)) {
                 HttpSession session = request.getSession(true);
                 session.setAttribute("isAuthenticated", true);
-                session.setAttribute("user", account);
+                session.setAttribute("account", securityService.isExist(email));
                 response.sendRedirect(request.getContextPath() + "/profile");
                 return;
             }

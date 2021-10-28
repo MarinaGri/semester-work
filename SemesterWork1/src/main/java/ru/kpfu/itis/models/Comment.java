@@ -1,22 +1,20 @@
 package ru.kpfu.itis.models;
 
-import java.util.Objects;
-import java.util.StringJoiner;
 
 public class Comment {
     private Integer id;
     private String text;
-    private Vacancy vacancy;
+    private Integer numVacancy;
 
-    public Comment(Integer id, String text, Vacancy vacancy) {
+    public Comment(Integer id, String text, Integer numVacancy) {
         this.id = id;
         this.text = text;
-        this.vacancy = vacancy;
+        this.numVacancy = numVacancy;
     }
 
-    public Comment(String text, Vacancy vacancy) {
+    public Comment(String text, Integer numVacancy) {
         this.text = text;
-        this.vacancy = vacancy;
+        this.numVacancy = numVacancy;
     }
 
     public Integer getId() {
@@ -35,11 +33,11 @@ public class Comment {
         this.text = text;
     }
 
-    public Vacancy getVacancy() {
-        return vacancy;
+    public Integer getNumVacancy() {
+        return numVacancy;
     }
 
-    public void setVacancy(Vacancy vacancy) {
-        this.vacancy = vacancy;
+    public void setNumVacancy(Integer numVacancy) {
+        this.numVacancy = numVacancy;
     }
 }

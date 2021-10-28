@@ -8,5 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface VacanciesRepository {
-    Optional<List<Vacancy>> getVacanciesByParam(Vacancy vacancy) throws ConnectionLostException, WrongVacancyParamException;
+    Optional<List<Vacancy>> getVacanciesByParam(Vacancy vacancy)
+            throws ConnectionLostException, WrongVacancyParamException;
 }
