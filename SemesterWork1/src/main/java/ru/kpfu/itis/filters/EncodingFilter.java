@@ -12,11 +12,11 @@ import java.io.IOException;
 public class EncodingFilter extends HttpFilter {
 
     @Override
-    public void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain)
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
 
-        chain.doFilter(req, resp);
+        chain.doFilter(request, response);
     }
 }

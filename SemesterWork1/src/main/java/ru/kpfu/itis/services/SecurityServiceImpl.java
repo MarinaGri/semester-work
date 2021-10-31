@@ -81,4 +81,13 @@ public class SecurityServiceImpl implements SecurityService{
         return keywordsRes == null && numRes == null;
 
     }
+
+    @Override
+    public void deleteAccount(Account account) {
+        try {
+            accountsRepository.deleteAccount(account);
+        } catch (DbException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
 }

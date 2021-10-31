@@ -66,18 +66,10 @@ public class PostsRepositoryJdbcImpl implements PostsRepository{
 
     @Override
     public Integer getNumOfPosts(Integer accountId) throws DbException {
-        Connection conn = DbWrapper.getConnection();
-        try {
-            PreparedStatement statement = conn.prepareStatement(SQL_COUNT_BY_ACCOUNT_ID);
-            statement.setInt(1, accountId);
-
-            ResultSet res = statement.executeQuery();
-
-            if(res.next()){
-                return res.getInt("count");
-            }
-        } catch (SQLException ex) {
-            throw new DbException("Connection to db failed", ex);
+        List<Integer> integers = simpleJdbcTemplate.query(SQL_COUNT_BY_ACCOUNT_ID,
+                row -> row.getInt("count"), accountId);
+        if(integers.size() > 0) {
+            return integers.get(0);
         }
         return null;
     }

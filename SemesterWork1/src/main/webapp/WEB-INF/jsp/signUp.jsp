@@ -1,7 +1,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<t:mainLayout title="Sing up page" css="css/styleForSign.css">
+<t:mainLayout title="Sing up page" css="static/css/styleForSign.css">
 <div class="main-row">
     <div class="form-col">
         <form method="POST" action="">
@@ -38,7 +38,7 @@
     </div>
     <div class="ladder-col">
         <div class="picture">
-            <img src="<c:url value='/img/people.jpg'/>" alt="People">
+            <img src="<c:url value='/static/img/people.jpg'/>" alt="People">
         </div>
         <div class="step-3">
             Посмотреть отзывы на вакансии

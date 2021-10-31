@@ -2,19 +2,22 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <t:profile>
+    <a href="<c:url value='/logout'/>"><button type="submit" class="button">Выйти</button></a>
+    <a><button type="submit" id="deleteAcc" class="button">Удалить аккаунт</button></a>
+    </div>
     <div class="posts">
         <form method="post" action="">
             <div class="mb-3">
                 <label class="form-label">Заголовок</label>
-                <input name="title" type="text" class="form-control"
+                <input id="title" name="title" type="text" class="form-control"
                        aria-describedby="passHelp" value="${title}">
                 <div id="titleHelp" class="form-text">${titleTip}</div>
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label"><b>Новый пост</b></label>
-                <textarea name="post" class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                <textarea name="post-text" class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
             </div>
-            <button type="submit" name="post" value="" class="button">Опубликовать</button>
+            <button type="submit" id="1" name="post" value="" class="button">Опубликовать</button>
         </form>
         <c:forEach items="${posts}" var="post">
             <div class="post">
@@ -24,7 +27,7 @@
                     </div>
                     <input type="hidden" name="postEdit" value="${post.id}">
                     <c:if test="${edit != post.id}">
-                        <input id="edit-icon-2" name="delete" class="input icon" type="submit" value="">
+                        <input id="trash-icon" name="delete" class="input icon" type="submit" value="">
                         <input id="edit-icon" name="edit" class="input icon" type="submit" value="">
                         <div class="title">${post.title}</div>
                         ${post.text}

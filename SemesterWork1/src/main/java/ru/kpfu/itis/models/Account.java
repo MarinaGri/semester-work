@@ -10,6 +10,7 @@ public class Account {
     private String lastName;
     private String email;
     private String password;
+    private String token;
 
     public Account(Integer id, String firstName, String lastName, String email, String password) {
         this.id = id;
@@ -25,6 +26,13 @@ public class Account {
         this.email = email;
         this.password = password;
     }
+
+    public Account(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
     public Account(String email, String password) {
         this.email = email;
         this.password = password;
@@ -70,9 +78,13 @@ public class Account {
         this.password = password;
     }
 
+    public String getToken() {
+        return token;
+    }
 
-
-
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     @Override
     public boolean equals(Object o) {

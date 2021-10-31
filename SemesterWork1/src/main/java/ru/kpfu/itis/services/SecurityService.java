@@ -10,4 +10,5 @@ public interface SecurityService {
     void signUp(Account account);
     boolean isValidAccount(HttpServletRequest request, Account account);
     boolean isValidSearchData(HttpServletRequest request, String keywords, String num);
+    void deleteAccount(Account account);
 }

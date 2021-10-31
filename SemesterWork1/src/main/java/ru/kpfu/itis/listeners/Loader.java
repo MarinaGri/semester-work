@@ -1,9 +1,7 @@
 package ru.kpfu.itis.listeners;
 
 import ru.kpfu.itis.repositories.*;
-import ru.kpfu.itis.services.PublicationService;
-import ru.kpfu.itis.services.SecurityServiceImpl;
-import ru.kpfu.itis.services.VacanciesService;
+import ru.kpfu.itis.services.*;
 import ru.kpfu.itis.validators.InputValidatorRegex;
 
 import javax.servlet.ServletContextEvent;
@@ -16,11 +14,20 @@ public class Loader implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         sce.getServletContext().setAttribute("securityService",
                 new SecurityServiceImpl(new AccountsRepositoryJdbcImpl(), new InputValidatorRegex()));
+
         sce.getServletContext().setAttribute("inputValidator", new InputValidatorRegex());
+
         sce.getServletContext().setAttribute("vacanciesService",
                 new VacanciesService(new VacanciesRepositoryAPIImpl(), new DictionariesRepositoryAPIImpl()));
+
         sce.getServletContext().setAttribute("publicationService",
                 new PublicationService(new CommentsRepositoryJdbcImpl(), new PostsRepositoryJdbcImpl()));
+
+        sce.getServletContext().setAttribute("subscribersService",
+                new SubscribersService(new AccountsRepositoryJdbcImpl()));
+
+        sce.getServletContext().setAttribute("oAuthService",
+                new OAuthService(new AccountsRepositoryJdbcImpl()));
     }
 
     @Override

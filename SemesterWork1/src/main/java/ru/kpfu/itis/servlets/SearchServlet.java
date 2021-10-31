@@ -1,10 +1,13 @@
 package ru.kpfu.itis.servlets;
 
+import ru.kpfu.itis.exceptions.LoadingDataException;
+import ru.kpfu.itis.exceptions.SavingFailedException;
 import ru.kpfu.itis.models.Comment;
 import ru.kpfu.itis.models.Vacancy;
 import ru.kpfu.itis.services.PublicationService;
 import ru.kpfu.itis.services.SecurityService;
 import ru.kpfu.itis.services.VacanciesService;
+import ru.kpfu.itis.utils.ShowErrorHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -40,10 +43,18 @@ public class SearchServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Vacancy vacancy = getVacancy(request);
 
-        postComment(request);
+        try {
+            postComment(request);
+        } catch (SavingFailedException ex) {
+            ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "search");
+        }
 
         if(vacancy != null) {
-            setVacancies(request, vacancy);
+            try {
+                setVacancies(request, vacancy);
+            } catch (LoadingDataException ex) {
+                ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "search");
+            }
         }
 
         setDictionaries(request);
@@ -84,7 +95,7 @@ public class SearchServlet extends HttpServlet {
         }
     }
 
-    private void setComments(List<Vacancy> vacancies){
+    private void setComments(List<Vacancy> vacancies) throws LoadingDataException {
         for(int i = 0; i < vacancies.size(); i++){
             List<Comment> commentList = publicationService.getCommentsByNumVacancy(vacancies.get(i).getNumber());
             if(commentList != null) {
@@ -93,13 +104,13 @@ public class SearchServlet extends HttpServlet {
         }
     }
 
-    private void setVacancies(HttpServletRequest request, Vacancy vacancy){
+    private void setVacancies(HttpServletRequest request, Vacancy vacancy) throws LoadingDataException {
         List<Vacancy> vacancies = vacanciesService.getVacancies(vacancy);
         setComments(vacancies);
         request.setAttribute("vacancies", vacancies);
     }
 
-    private void postComment(HttpServletRequest request){
+    private void postComment(HttpServletRequest request) throws SavingFailedException {
         String numStr = request.getParameter("numVacancy");
         if(numStr != null) {
             Comment comment = new Comment(request.getParameter("comment"), Integer.parseInt(numStr));

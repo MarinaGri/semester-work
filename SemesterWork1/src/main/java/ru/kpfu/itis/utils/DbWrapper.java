@@ -14,7 +14,7 @@ public class DbWrapper {
     public static Connection getConnection() throws DbException {
         Properties environment = new Properties();
         try {
-            environment.load(DbWrapper.class.getResourceAsStream("/db.properties"));
+            environment.load(DbWrapper.class.getResourceAsStream("/application.properties"));
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }

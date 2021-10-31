@@ -1,5 +1,7 @@
 package ru.kpfu.itis.filters;
 
+import ru.kpfu.itis.models.Account;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +11,8 @@ import java.io.IOException;
 
 @WebFilter("/*")
 public class AuthFilter implements Filter {
+    private final String[] secretPages = {"/profile", "/search", "/subscribers", "/anotherProfile", "/logout",
+            "/deleteAccount", "/subscribe", "/unsubscribe"};
     private ServletContext servletContext;
 
     @Override
@@ -24,11 +28,14 @@ public class AuthFilter implements Filter {
         HttpSession session = request.getSession(false);
         String contextPath = request.getContextPath();
 
-        boolean isSecretPage = request.getRequestURI().equals(contextPath + "/profile") ||
-                request.getRequestURI().equals(contextPath + "/search");
+        boolean isSecretPage = false;
+        for(String page: secretPages){
+            isSecretPage |= request.getRequestURI().equals(contextPath + page);
+        }
+
         boolean isAuthenticated = false;
-        boolean isStaticResource = request.getRequestURI().startsWith(contextPath +"/css/") ||
-                request.getRequestURI().startsWith(contextPath +"/img/");
+        boolean isStaticResource = request.getRequestURI().startsWith(contextPath +"/static/") ||
+                request.getRequestURI().startsWith(contextPath +"/js/");
 
         if (session != null) {
             isAuthenticated = session.getAttribute("isAuthenticated") != null;
@@ -37,7 +44,8 @@ public class AuthFilter implements Filter {
         if (!isAuthenticated && isSecretPage && !isStaticResource) {
              response.sendRedirect(contextPath + "/signIn");
         } else if (isAuthenticated && !isSecretPage  && !isStaticResource) {
-            response.sendRedirect(contextPath + "/profile");
+            Account account = (Account) session.getAttribute("account");
+            response.sendRedirect(contextPath + "/profile?user=" + account.getId());
         } else {
              filterChain.doFilter(request, response);
         }

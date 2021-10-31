@@ -1,7 +1,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<t:mainLayout title="Search page" css="css/styleForSearch.css">
+<t:mainLayout title="Search page" css="static/css/styleForSearch.css">
     <div class="main-row">
         <div class="lenta-col">
             <c:forEach items="${vacancies}" var="vacancy">
