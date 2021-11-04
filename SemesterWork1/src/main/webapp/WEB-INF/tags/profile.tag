@@ -1,7 +1,10 @@
 <%@tag description="Default Layout Tag" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
-<t:mainLayout title="Profile page" css="static/css/styleForProfile.css">
+<%@attribute name="jsPath" required="false" type="java.lang.String"%>
+
+<t:mainLayout title="Profile page" css="static/css/styleForProfile.css"
+              jsPath="${pageContext.request.contextPath}/js/modal.js">
     <div class="main-row">
         <div class="account">
             <div class="name">
@@ -19,7 +22,6 @@
                     <img class="icon" src="<c:url value='/static/img/svg/file-earmark-post.svg'/>">
                 </a>
             </div>
-
             <jsp:doBody/>
     </div>
 </t:mainLayout>

@@ -64,13 +64,17 @@ public class SignInServlet extends HttpServlet {
         Account account = new Account(email, password);
 
         if (email != null) {
-            if (securityService.isSignIn(account)) {
-                HttpSession session = request.getSession(true);
-                session.setAttribute("isAuthenticated", true);
-                Account acc = securityService.isExist(email);
-                session.setAttribute("account", acc);
-                response.sendRedirect(request.getContextPath() + "/profile?user=" + acc.getId());
-                return;
+            try {
+                if (securityService.isSignIn(account)) {
+                    HttpSession session = request.getSession(true);
+                    session.setAttribute("isAuthenticated", true);
+                    Account acc = securityService.isExist(email);
+                    session.setAttribute("account", acc);
+                    response.sendRedirect(request.getContextPath() + "/profile?user=" + acc.getId());
+                    return;
+                }
+            } catch (LoadingDataException ex){
+                ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "error");
             }
             request.setAttribute("passwordTip","Wrong email or password");
             request.setAttribute("email", email);

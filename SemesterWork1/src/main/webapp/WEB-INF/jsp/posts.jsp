@@ -1,18 +1,14 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<t:profile>
+<t:profile jsPath="${pageContext.request.contextPath}/js/comment.js">
     <a href="<c:url value='/logout'/>"><button type="submit" class="button">Выйти</button></a>
     <a><button type="submit" id="deleteAcc" class="button">Удалить аккаунт</button></a>
     </div>
     <div class="posts">
         <form method="post" action="">
-            <div class="mb-3">
-                <label class="form-label">Заголовок</label>
-                <input id="title" name="title" type="text" class="form-control"
-                       aria-describedby="passHelp" value="${title}">
-                <div id="titleHelp" class="form-text">${titleTip}</div>
-            </div>
+            <t:input name="title" value="${title}" innerText="Заголовок" type="text" nameTip="${titleTip}">
+            </t:input>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label"><b>Новый пост</b></label>
                 <textarea name="post-text" class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
@@ -33,17 +29,13 @@
                         ${post.text}
                     </c:if>
                     <c:if test="${edit == post.id}">
-                        <div class="mb-3">
-                            <label class="form-label">Заголовок</label>
-                            <input name="title" type="text" class="form-control"
-                                   aria-describedby="passHelp" value="${post.title}">
-                            <div class="form-text">${titleTip}</div>
-                        </div>
+                        <t:input name="title" value="${post.title}" innerText="Заголовок" type="text" nameTip="${titleTip}">
+                        </t:input>
                         <div class="mb-3">
                             <label for="exampleFormControlTextarea1" class="form-label"><b>Изменить пост</b></label>
                             <textarea name="post-text" class="form-control" rows="2">${post.text}</textarea>
                         </div>
-                        <button type="submit" name="save" value="${post.title}${post.text}" class="button">Сохранить</button>
+                        <button type="submit" name="save" value="${post.title}${post.text}" class="button">Save</button>
                     </c:if>
                 </form>
             </div>

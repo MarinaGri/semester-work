@@ -1,6 +1,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <t:profile>
     <a <c:if test="${isSubscribe == 'Подписаться'}">
             href="<c:url value='/subscribe?user=${account.id}'/>"

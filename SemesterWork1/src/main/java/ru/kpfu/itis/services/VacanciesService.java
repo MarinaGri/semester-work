@@ -1,6 +1,7 @@
 package ru.kpfu.itis.services;
 
 import ru.kpfu.itis.exceptions.ConnectionLostException;
+import ru.kpfu.itis.exceptions.LoadingDataException;
 import ru.kpfu.itis.exceptions.WrongVacancyParamException;
 import ru.kpfu.itis.models.Vacancy;
 import ru.kpfu.itis.repositories.DictionariesRepository;
@@ -19,37 +20,36 @@ public class VacanciesService {
         this.dictionariesRepository = dictionariesRepository;
     }
 
-    //FIXME добавить страницу с ошибками и переписать нормально без IAEx
-    public Map<String, String> getExperience(){
+    public Map<String, String> getExperience() throws LoadingDataException {
         try{
             return dictionariesRepository.getExperience();
         } catch (ConnectionLostException ex){
-            throw new IllegalArgumentException();
+            throw new LoadingDataException("Failed to load data from hh.ru", ex);
         }
     }
 
-    public Map<String, String> getEmployment(){
+    public Map<String, String> getEmployment() throws LoadingDataException {
         try{
             return dictionariesRepository.getEmployment();
         } catch (ConnectionLostException ex){
-            throw new IllegalArgumentException();
+            throw new LoadingDataException("Failed to load data from hh.ru", ex);
         }
     }
 
-    public Map<String, String> getSchedule(){
+    public Map<String, String> getSchedule() throws LoadingDataException {
         try{
             return dictionariesRepository.getSchedule();
         } catch (ConnectionLostException ex){
-            throw new IllegalArgumentException();
+            throw new LoadingDataException("Failed to load data from hh.ru", ex);
         }
     }
 
-    public List<Vacancy> getVacancies(Vacancy vacancy){
+    public List<Vacancy> getVacancies(Vacancy vacancy) throws LoadingDataException {
         try {
             Optional<List<Vacancy>> optionalVacancies = vacanciesRepository.getVacanciesByParam(vacancy);
             return optionalVacancies.orElse(null);
-        } catch (ConnectionLostException | WrongVacancyParamException e) {
-            throw new IllegalArgumentException(e);
+        } catch (ConnectionLostException | WrongVacancyParamException ex) {
+            throw new LoadingDataException("Failed to load data from hh.ru", ex);
         }
     }
 }

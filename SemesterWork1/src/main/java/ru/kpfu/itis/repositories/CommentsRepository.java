@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface CommentsRepository {
     void save(Comment comment) throws DbException;
     Optional<List<Comment>> findByNumVacancy(Integer num) throws DbException;
+    void update(Comment comment) throws DbException;
+    void delete(Comment comment) throws DbException;
 }

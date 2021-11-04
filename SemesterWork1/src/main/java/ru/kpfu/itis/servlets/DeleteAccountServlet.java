@@ -1,7 +1,9 @@
 package ru.kpfu.itis.servlets;
 
+import ru.kpfu.itis.exceptions.RemovalFailedException;
 import ru.kpfu.itis.models.Account;
 import ru.kpfu.itis.services.SecurityService;
+import ru.kpfu.itis.utils.ShowErrorHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,7 +29,11 @@ public class DeleteAccountServlet extends HttpServlet {
         Account account = (Account) session.getAttribute("account");
         session.removeAttribute("isAuthenticated");
         session.removeAttribute("account");
-        securityService.deleteAccount(account);
+        try {
+            securityService.deleteAccount(account);
+        } catch (RemovalFailedException ex) {
+            ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "error");
+        }
         response.sendRedirect(request.getContextPath() + "/signUp");
     }
 }

@@ -36,6 +36,10 @@ body{
     background-color: #814343;
 }
 
+h1{
+    color: #eee;
+}
+
 .ladder-col{
     width: 60%;
     display: flex;
@@ -51,6 +55,10 @@ body{
     width: 40%;
     float: left;
 
+}
+
+.count{
+    text-align: end;
 }
 
 .picture {

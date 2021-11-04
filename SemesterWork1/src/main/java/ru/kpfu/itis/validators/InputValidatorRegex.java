@@ -8,14 +8,14 @@ private final String emailReg = "^([\\w!#$%&'*+\\/=?^_`\\-{|}~]+|\"" +
         "[\\w!#$%&'*+\\/=?^_`\\s{|}~\\.?(),:;<>@\\\\\\[\\]]*\")+" +
         "[\\w!#$%&'*+\\/=?^_`{|}~\\.]*@\\w+(\\w\\-)*\\.([A-Za-z]+)$";
 private final String dateReg = "^(?:[0-2][0-9]|3[0-1])\\.(?:0[0-9]|1[0-2])\\.(?:19[0-9][0-9]|20[0-1][0-9]|202[0-1])$";
-private final String nameReg = "[A-Za-zА-Яа-я_0-9]{2,}";
+private final String nameReg = "^[^`~!@#$%^&\\-*()+{}\\[\\]\"№|;:?\\s\\t=]+$";
 private final String wordsReg = "[A-Za-zА-Яа-я_0-9 ]*";
 private final String numReg = "[0-9]*";
 
     @Override
     public String checkPassword(String password) {
-        if(password.length() < 5) {
-            return "Password must be at least 5 characters long";
+        if(password.length() < 5 || password.length() > 20) {
+            return "Password must be 5 - 20 characters long";
         }
         String message = "Password must contains ";
         if(!Pattern.compile("[A-Z]").matcher(password).find()){

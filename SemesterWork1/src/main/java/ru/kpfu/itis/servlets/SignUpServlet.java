@@ -1,8 +1,10 @@
 package ru.kpfu.itis.servlets;
 
 
+import ru.kpfu.itis.exceptions.LoadingDataException;
 import ru.kpfu.itis.models.Account;
 import ru.kpfu.itis.services.SecurityService;
+import ru.kpfu.itis.utils.ShowErrorHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,12 +36,16 @@ public class SignUpServlet extends HttpServlet {
         String password = request.getParameter("password");
         Account account = new Account(firstName, lastName, email, password);
         if(email != null) {
-            if(securityService.isExist(email) != null) {
-                request.setAttribute("emailTip", MESS_USER_EXIST);
-            } else if(securityService.isValidAccount(request, account)) {
-                this.securityService.signUp(account);
-                response.sendRedirect(request.getContextPath() + "/signIn");
-                return;
+            try {
+                if (securityService.isExist(email) != null) {
+                    request.setAttribute("emailTip", MESS_USER_EXIST);
+                } else if (securityService.isValidAccount(request, account)) {
+                    this.securityService.signUp(account);
+                    response.sendRedirect(request.getContextPath() + "/signIn");
+                    return;
+                }
+            } catch (LoadingDataException ex){
+                ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "error");
             }
             request.setAttribute("password", password);
             request.setAttribute("firstName", firstName);

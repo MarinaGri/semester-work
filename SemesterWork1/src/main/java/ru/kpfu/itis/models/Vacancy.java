@@ -1,6 +1,7 @@
 package ru.kpfu.itis.models;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 public class Vacancy {
@@ -9,7 +10,7 @@ public class Vacancy {
     private String text;
     private String area;
     private String experience;
-    private String employment; //тип занятости
+    private String employment;
     private String schedule;
     private String salary;
     private boolean onlyWithSalary;
@@ -39,50 +40,92 @@ public class Vacancy {
         this.link = link;
     }
 
-    public Vacancy(){}
-
     public Integer getNumber() {
         return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getText() {
         return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public String getArea() {
         return area;
     }
 
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     public String getExperience() {
         return experience;
+    }
+
+    public void setExperience(String experience) {
+        this.experience = experience;
     }
 
     public String getEmployment() {
         return employment;
     }
 
+    public void setEmployment(String employment) {
+        this.employment = employment;
+    }
+
     public String getSchedule() {
         return schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
     }
 
     public String getSalary() {
         return salary;
     }
 
-    public boolean getOnlyWithSalary() {
+    public void setSalary(String salary) {
+        this.salary = salary;
+    }
+
+    public boolean isOnlyWithSalary() {
         return onlyWithSalary;
+    }
+
+    public void setOnlyWithSalary(boolean onlyWithSalary) {
+        this.onlyWithSalary = onlyWithSalary;
     }
 
     public String getRequirement() {
         return requirement;
     }
 
+    public void setRequirement(String requirement) {
+        this.requirement = requirement;
+    }
+
     public String getResponsibility() {
         return responsibility;
+    }
+
+    public void setResponsibility(String responsibility) {
+        this.responsibility = responsibility;
     }
 
     public String getLink() {
@@ -99,6 +142,27 @@ public class Vacancy {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vacancy vacancy = (Vacancy) o;
+        return Objects.equals(name, vacancy.name) &&
+                Objects.equals(text, vacancy.text) &&
+                Objects.equals(area, vacancy.area) &&
+                Objects.equals(experience, vacancy.experience) &&
+                Objects.equals(employment, vacancy.employment) &&
+                Objects.equals(schedule, vacancy.schedule) &&
+                Objects.equals(salary, vacancy.salary) &&
+                Objects.equals(requirement, vacancy.requirement) &&
+                Objects.equals(responsibility, vacancy.responsibility);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, text, area, experience, employment, schedule, salary, requirement, responsibility);
     }
 
     @Override

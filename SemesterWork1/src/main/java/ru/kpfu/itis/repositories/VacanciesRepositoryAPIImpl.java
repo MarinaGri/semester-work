@@ -91,7 +91,6 @@ public class VacanciesRepositoryAPIImpl implements VacanciesRepository{
                 field.setAccessible(true);
                 String value = String.valueOf(field.get(vacancy));
                 if (value != null && !value.equals("null") && !value.equals("")) {
-                    System.out.println(value);
                     sb.append(param)
                             .append("=")
                             .append(URLEncoder.encode(value, StandardCharsets.UTF_8))

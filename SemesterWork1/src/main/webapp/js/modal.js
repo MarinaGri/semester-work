@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+    btn = document.getElementById('deleteAcc');
+
     function showConfirm() {
         if (ctx) {
 
@@ -10,5 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     }
-    document.getElementById('deleteAcc').addEventListener('click', showConfirm);
+    if(btn) {
+        btn.addEventListener('click', showConfirm);
+    }
 });

@@ -12,7 +12,7 @@ import java.io.IOException;
 @WebFilter("/*")
 public class AuthFilter implements Filter {
     private final String[] secretPages = {"/profile", "/search", "/subscribers", "/anotherProfile", "/logout",
-            "/deleteAccount", "/subscribe", "/unsubscribe"};
+            "/deleteAccount", "/subscribe", "/unsubscribe", "/comment"};
     private ServletContext servletContext;
 
     @Override

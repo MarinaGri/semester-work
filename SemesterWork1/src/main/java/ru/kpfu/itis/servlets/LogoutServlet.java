@@ -13,18 +13,10 @@ import java.io.IOException;
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
 
-    private SecurityService securityService;
-
-    @Override
-    public void init() {
-        securityService = (SecurityService) getServletContext().getAttribute("securityService");
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         session.setAttribute("isAuthenticated", null);
-        System.out.println("vjfnvjknfkjdvd");
         response.sendRedirect(request.getContextPath() + "/signIn");
     }
 

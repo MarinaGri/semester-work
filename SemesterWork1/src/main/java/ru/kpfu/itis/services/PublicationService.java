@@ -78,4 +78,20 @@ public class PublicationService {
             throw new RemovalFailedException("Failed to delete post", ex);
         }
     }
+
+    public void updateComment(Comment comment) throws LoadingDataException {
+        try{
+            commentsRepository.update(comment);
+        } catch (DbException ex){
+            throw new LoadingDataException("Failed to load comment", ex);
+        }
+    }
+
+    public void deleteComment(Comment comment) throws RemovalFailedException {
+        try{
+            commentsRepository.delete(comment);
+        } catch (DbException ex){
+            throw new RemovalFailedException("Failed to delete comment", ex);
+        }
+    }
 }

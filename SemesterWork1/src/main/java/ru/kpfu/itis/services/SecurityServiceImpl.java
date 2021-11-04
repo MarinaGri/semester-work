@@ -1,6 +1,9 @@
 package ru.kpfu.itis.services;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.kpfu.itis.exceptions.DbException;
+import ru.kpfu.itis.exceptions.LoadingDataException;
+import ru.kpfu.itis.exceptions.RemovalFailedException;
 import ru.kpfu.itis.models.Account;
 import ru.kpfu.itis.repositories.AccountsRepository;
 import ru.kpfu.itis.validators.InputValidator;
@@ -11,21 +14,23 @@ import java.util.Optional;
 public class SecurityServiceImpl implements SecurityService{
     private final AccountsRepository accountsRepository;
     private final InputValidator inputValidator;
+    private final PasswordEncoder passwordEncoder;
 
 
-    public SecurityServiceImpl(AccountsRepository accountsRepository, InputValidator inputValidator) {
+    public SecurityServiceImpl(AccountsRepository accountsRepository, InputValidator inputValidator,
+                               PasswordEncoder passwordEncoder) {
         this.accountsRepository = accountsRepository;
         this.inputValidator = inputValidator;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    //FIXME добавить страницу с ошибками и переписать нормально без IAEx
     @Override
-    public boolean isSignIn(Account account) {
+    public boolean isSignIn(Account account) throws LoadingDataException {
         Optional<Account> accountOptional;
         try {
             accountOptional = accountsRepository.findByEmail(account.getEmail());
-        } catch (DbException e) {
-            throw new IllegalArgumentException(e);
+        } catch (DbException ex) {
+            throw new LoadingDataException("Failed to load account's data", ex);
         }
 
         if (accountOptional.isEmpty()) {
@@ -33,27 +38,28 @@ public class SecurityServiceImpl implements SecurityService{
         }
 
         Account accountRes = accountOptional.get();
-
-        return accountRes.getPassword().equals(account.getPassword());
+        return passwordEncoder.matches(account.getPassword(), accountRes.getPassword());
     }
 
     @Override
-    public Account isExist(String email) {
+    public Account isExist(String email) throws LoadingDataException {
         Optional<Account> accountOptional;
         try {
             accountOptional = accountsRepository.findByEmail(email);
-        } catch (DbException e) {
-            throw new IllegalArgumentException(e);
+        } catch (DbException ex) {
+            throw new LoadingDataException("Failed to load account's data", ex);
         }
         return accountOptional.orElse(null);
     }
 
     @Override
-    public void signUp(Account account) {
+    public void signUp(Account account) throws LoadingDataException {
         try {
+            String password = passwordEncoder.encode(account.getPassword());
+            account.setPassword(password);
             accountsRepository.save(account);
-        } catch (DbException e) {
-            throw new IllegalArgumentException(e);
+        } catch (DbException ex) {
+            throw new LoadingDataException("Failed to load account's data", ex);
         }
     }
 
@@ -83,11 +89,11 @@ public class SecurityServiceImpl implements SecurityService{
     }
 
     @Override
-    public void deleteAccount(Account account) {
+    public void deleteAccount(Account account) throws RemovalFailedException {
         try {
             accountsRepository.deleteAccount(account);
-        } catch (DbException e) {
-            throw new IllegalArgumentException(e);
+        } catch (DbException ex) {
+            throw new RemovalFailedException("Failed to delete account", ex);
         }
     }
 }

@@ -1,7 +1,9 @@
 package ru.kpfu.itis.servlets;
 
 import ru.kpfu.itis.exceptions.LoadingDataException;
+import ru.kpfu.itis.exceptions.RemovalFailedException;
 import ru.kpfu.itis.exceptions.SavingFailedException;
+import ru.kpfu.itis.models.Account;
 import ru.kpfu.itis.models.Comment;
 import ru.kpfu.itis.models.Vacancy;
 import ru.kpfu.itis.services.PublicationService;
@@ -35,19 +37,7 @@ public class SearchServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setDictionaries(request);
-        request.getRequestDispatcher("WEB-INF/jsp/search.jsp").forward(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Vacancy vacancy = getVacancy(request);
-
-        try {
-            postComment(request);
-        } catch (SavingFailedException ex) {
-            ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "search");
-        }
 
         if(vacancy != null) {
             try {
@@ -57,11 +47,48 @@ public class SearchServlet extends HttpServlet {
             }
         }
 
-        setDictionaries(request);
+        try {
+            setDictionaries(request);
+        } catch (LoadingDataException ex) {
+            ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "error");
+        }
+
         request.getRequestDispatcher("WEB-INF/jsp/search.jsp").forward(request, response);
     }
 
-    private void setDictionaries(HttpServletRequest request){
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("account");
+        String text = request.getParameter("comment");
+        Integer numVac = request.getParameter("numVac") == null? null: Integer.parseInt(request.getParameter("numVac"));
+        Comment comment = new Comment(text, account.getId(), numVac,null);
+
+        try {
+            if (request.getParameter("save") != null) {
+                Integer id = Integer.valueOf(request.getParameter("save"));
+                comment.setId(id);
+                publicationService.updateComment(comment);
+            }
+
+            if (request.getParameter("post") != null) {
+                session.setAttribute("comment", comment.getNumVacancy());
+                publicationService.postComment(comment);
+                postComment(request);
+            }
+            if (request.getParameter("delete") != null){
+                Integer id = Integer.valueOf(request.getParameter("delete"));
+                comment.setId(id);
+                publicationService.deleteComment(comment);
+            }
+
+        } catch (LoadingDataException | RemovalFailedException | SavingFailedException ex) {
+            ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "search");
+        }
+        doGet(request, response);
+    }
+
+    private void setDictionaries(HttpServletRequest request) throws LoadingDataException {
         request.setAttribute("experience", vacanciesService.getExperience());
         request.setAttribute("employment", vacanciesService.getEmployment());
         request.setAttribute("schedule", vacanciesService.getSchedule());
@@ -113,7 +140,9 @@ public class SearchServlet extends HttpServlet {
     private void postComment(HttpServletRequest request) throws SavingFailedException {
         String numStr = request.getParameter("numVacancy");
         if(numStr != null) {
-            Comment comment = new Comment(request.getParameter("comment"), Integer.parseInt(numStr));
+            HttpSession session = request.getSession(false);
+            Account account = (Account) session.getAttribute("account");
+            Comment comment = new Comment(request.getParameter("comment"), account.getId(), Integer.parseInt(numStr), null);
             publicationService.postComment(comment);
         }
     }
@@ -130,6 +159,9 @@ public class SearchServlet extends HttpServlet {
         } else {
             if(session.getAttribute("vacancy") != null) {
                 vacancy = (Vacancy) session.getAttribute("vacancy");
+            }
+            else if(session.getAttribute("comment") != null){
+                vacancy = (Vacancy) session.getAttribute("comment");
             }
             setAttributesFromSession(request, session);
         }

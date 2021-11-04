@@ -1,5 +1,6 @@
 package ru.kpfu.itis.listeners;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.kpfu.itis.repositories.*;
 import ru.kpfu.itis.services.*;
 import ru.kpfu.itis.validators.InputValidatorRegex;
@@ -13,7 +14,8 @@ public class Loader implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         sce.getServletContext().setAttribute("securityService",
-                new SecurityServiceImpl(new AccountsRepositoryJdbcImpl(), new InputValidatorRegex()));
+                new SecurityServiceImpl(
+                        new AccountsRepositoryJdbcImpl(), new InputValidatorRegex(), new BCryptPasswordEncoder()));
 
         sce.getServletContext().setAttribute("inputValidator", new InputValidatorRegex());
 
