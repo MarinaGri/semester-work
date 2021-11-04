@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const NAME_REG = /^[^`~!@#$%^&*()+{}\[\]"№|;:?\s\t=]+$/;
     const EMAIL_REG = /^([\w!#$%&'*+\/=?^_`\-{|}~]+|"[\w!#$%&'*+\/=?^_`\s{|}~.(),:;<>@\\\[\]]*")+[\w!#$%&'*+\/=?^_`{|}~.]*@\w+(\w-)*\.([A-Za-z]+)$/;
 
     let btn = document.getElementsByTagName('button')[0];
@@ -8,37 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let counter = document.getElementsByClassName('count')[0];
 
-    let firstName = document.getElementById('firstName');
-    let lastName = document.getElementById('lastName');
     let email = document.getElementById('email');
     let pass = document.getElementById('password');
-
-    let isValidFirstName = function (){
-        if(firstName === null) return true;
-        if(firstName.value === '') return false;
-
-        let nameHelp = document.getElementById('firstNameHelp');
-
-        if(firstName.value.match(NAME_REG) === null){
-            nameHelp.innerText = 'Name can only contain letters, numbers or symbol "_"';
-            return false;
-        }
-        nameHelp.innerText = null;
-        return true;
-    }
-
-    let isValidLastName = function (){
-        if(lastName === null) return true;
-        if(lastName.value === '') return false;
-        let nameHelp = document.getElementById('lastNameHelp');
-
-        if(lastName.value.match(NAME_REG) === null){
-            nameHelp.innerText = 'Name can only contain letters, numbers or symbol "_"';
-            return false;
-        }
-        nameHelp.innerText = null;
-        return true;
-    }
 
     let isValidPass = function (){
         if(pass.value === ''){
@@ -77,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let isValid = function (){
         counter.innerText = pass.value.length + '/20';
-        if(isValidEmail() & isValidPass() & isValidFirstName() & isValidLastName()){
+        if(isValidEmail() & isValidPass()){
             btn.style.color = 'white';
             btn.removeAttribute('disabled');
         } else {

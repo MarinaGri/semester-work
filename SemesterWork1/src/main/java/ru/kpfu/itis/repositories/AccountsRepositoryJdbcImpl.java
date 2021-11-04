@@ -49,7 +49,7 @@ public class AccountsRepositoryJdbcImpl implements AccountsRepository {
                                             "where account_id is not null ";
 
     //language=SQL
-    private final String SQL_DELETE_ACC_BY_ID = "delete from account where id = ?";
+    private final String SQL_DELETE_ACC_BY_ID = "delete from account cascade where id = ?";
 
     //language=SQL
     private final String SQL_INSERT_INTO_SUBS = "insert into subscription(subscriber_id, account_id) values (?, ?)";

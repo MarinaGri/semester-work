@@ -4,6 +4,7 @@ import ru.kpfu.itis.exceptions.LoadingDataException;
 import ru.kpfu.itis.exceptions.RemovalFailedException;
 import ru.kpfu.itis.exceptions.SavingFailedException;
 import ru.kpfu.itis.models.Account;
+import ru.kpfu.itis.models.Comment;
 import ru.kpfu.itis.models.Post;
 import ru.kpfu.itis.services.PublicationService;
 import ru.kpfu.itis.services.SecurityService;
@@ -11,6 +12,7 @@ import ru.kpfu.itis.services.SubscribersService;
 import ru.kpfu.itis.services.VacanciesService;
 import ru.kpfu.itis.utils.ShowErrorHelper;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
@@ -89,6 +92,16 @@ public class ProfileServlet extends HttpServlet {
         String text = request.getParameter("post-text");
         Post post = new Post(title, text, account.getId());
 
+        if(request.getParameter("saveComment") != null){
+            Integer id = Integer.parseInt(request.getParameter("saveComment"));
+            Comment comment = new Comment(request.getParameter("comment"), account.getId(),null, id);
+            try {
+                publicationService.postComment(comment);
+            } catch (SavingFailedException ex) {
+                ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "error");
+            }
+        }
+
         if(request.getParameter("edit") != null) {
             request.setAttribute("edit", request.getParameter("postEdit"));
         } else
@@ -111,7 +124,7 @@ public class ProfileServlet extends HttpServlet {
             } catch (RemovalFailedException | LoadingDataException | SavingFailedException ex) {
                 ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "profile");
             }
-        doGet(request, response);
+        response.sendRedirect(request.getContextPath() + "/profile?user=" + account.getId());
     }
 
     private  void setProfileData(HttpServletRequest request, HttpServletResponse response,
@@ -119,7 +132,14 @@ public class ProfileServlet extends HttpServlet {
         request.setAttribute("account", account);
         try {
             request.setAttribute("numOfPosts", publicationService.getNumOfPosts(account.getId()));
-            request.setAttribute("posts", publicationService.findPosts(account.getId()));
+            List<Post> posts = publicationService.findPosts(account.getId());
+            for(int i = 0; i < posts.size(); i++){
+                List<Comment> commentList = publicationService.getCommentsByPostId(posts.get(i).getId());
+                if(commentList != null) {
+                    posts.get(i).setComments(commentList);
+                }
+            }
+            request.setAttribute("posts", posts);
         } catch (LoadingDataException ex) {
             ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "profile");
         }

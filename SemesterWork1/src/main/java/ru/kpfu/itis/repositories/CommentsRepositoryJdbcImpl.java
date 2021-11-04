@@ -15,6 +15,9 @@ public class CommentsRepositoryJdbcImpl implements CommentsRepository{
     private final String SQL_SELECT_BY_NUM_VACANCY = "select * from comment where num_vacancy = ?";
 
     //language=SQL
+    private final String SQL_SELECT_BY_POST_ID = "select * from comment where post_id = ?";
+
+    //language=SQL
     private final String SQL_DELETE_BY_ID = "delete from comment where id = ?";
 
     //language=SQL
@@ -48,6 +51,12 @@ public class CommentsRepositoryJdbcImpl implements CommentsRepository{
     @Override
     public Optional<List<Comment>> findByNumVacancy(Integer num) throws DbException {
         List<Comment> comments = simpleJdbcTemplate.query(SQL_SELECT_BY_NUM_VACANCY, rowMapper, num);
+        return Optional.of(comments);
+    }
+
+    @Override
+    public Optional<List<Comment>> findByPostId(Integer id) throws DbException {
+        List<Comment> comments = simpleJdbcTemplate.query(SQL_SELECT_BY_POST_ID, rowMapper, id);
         return Optional.of(comments);
     }
 

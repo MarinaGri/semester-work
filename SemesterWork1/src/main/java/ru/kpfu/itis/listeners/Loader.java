@@ -13,9 +13,8 @@ import javax.servlet.annotation.WebListener;
 public class Loader implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        sce.getServletContext().setAttribute("securityService",
-                new SecurityServiceImpl(
-                        new AccountsRepositoryJdbcImpl(), new InputValidatorRegex(), new BCryptPasswordEncoder()));
+        sce.getServletContext().setAttribute("securityService", new SecurityService(
+                new AccountsRepositoryJdbcImpl(), new InputValidatorRegex(), new BCryptPasswordEncoder()));
 
         sce.getServletContext().setAttribute("inputValidator", new InputValidatorRegex());
 

@@ -38,6 +38,15 @@ public class PublicationService {
         }
     }
 
+    public List<Comment> getCommentsByPostId(Integer num) throws LoadingDataException {
+        try{
+            Optional<List<Comment>> optionalComments = commentsRepository.findByPostId(num);
+            return optionalComments.orElse(null);
+        } catch (DbException ex){
+            throw new LoadingDataException("Failed to load comments", ex);
+        }
+    }
+
     public List<Post> findPosts(int id) throws LoadingDataException{
         try{
             Optional<List<Post>> optionalPosts = postsRepository.findByAccountId(id);

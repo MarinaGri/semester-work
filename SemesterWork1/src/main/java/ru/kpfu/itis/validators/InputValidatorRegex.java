@@ -7,10 +7,8 @@ public class InputValidatorRegex implements InputValidator{
 private final String emailReg = "^([\\w!#$%&'*+\\/=?^_`\\-{|}~]+|\"" +
         "[\\w!#$%&'*+\\/=?^_`\\s{|}~\\.?(),:;<>@\\\\\\[\\]]*\")+" +
         "[\\w!#$%&'*+\\/=?^_`{|}~\\.]*@\\w+(\\w\\-)*\\.([A-Za-z]+)$";
-private final String dateReg = "^(?:[0-2][0-9]|3[0-1])\\.(?:0[0-9]|1[0-2])\\.(?:19[0-9][0-9]|20[0-1][0-9]|202[0-1])$";
 private final String nameReg = "^[^`~!@#$%^&\\-*()+{}\\[\\]\"№|;:?\\s\\t=]+$";
 private final String wordsReg = "[A-Za-zА-Яа-я_0-9 ]*";
-private final String numReg = "[0-9]*";
 
     @Override
     public String checkPassword(String password) {
@@ -36,16 +34,6 @@ private final String numReg = "[0-9]*";
         Matcher matcher = pattern.matcher(email);
         if(!matcher.matches()){
             return "Input string is not an email";
-        }
-        return null;
-    }
-
-    @Override
-    public String checkDate(String date){
-        Pattern pattern = Pattern.compile(dateReg);
-        Matcher matcher = pattern.matcher(date);
-        if(!matcher.matches()){
-            return "Enter real birthdate in dd.mm.yyyy format";
         }
         return null;
     }

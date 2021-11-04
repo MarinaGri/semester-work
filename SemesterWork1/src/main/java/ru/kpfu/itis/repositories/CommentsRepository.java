@@ -11,4 +11,5 @@ public interface CommentsRepository {
     Optional<List<Comment>> findByNumVacancy(Integer num) throws DbException;
     void update(Comment comment) throws DbException;
     void delete(Comment comment) throws DbException;
+    Optional<List<Comment>> findByPostId(Integer id) throws DbException;
 }

@@ -18,13 +18,15 @@
         </div>
         <c:forEach items="${posts}" var="post">
             <div class="post">
-                <form class="form-edit" method="post" action="<c:url value='/profile#${posts.indexOf(post)}'/>">
+                <form class="form-edit" method="post" action="<c:url value='/anotherProfile?user=${post.accountId}#${posts.indexOf(post)}'/>">
                     <div class="ancor">
                         <a name="${posts.indexOf(post)}" class="a_link"></a>
                     </div>
                     <input type="hidden" name="postEdit" value="${post.id}">
                     <div class="title">${post.title}</div>
                         ${post.text}
+                    <t:comments post="${post}">
+                    </t:comments>
                 </form>
             </div>
         </c:forEach>

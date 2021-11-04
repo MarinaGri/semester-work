@@ -1,7 +1,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<t:profile jsPath="${pageContext.request.contextPath}/js/comment.js">
+<t:profile>
     <a href="<c:url value='/logout'/>"><button type="submit" class="button">Выйти</button></a>
     <a><button type="submit" id="deleteAcc" class="button">Удалить аккаунт</button></a>
     </div>
@@ -13,7 +13,7 @@
                 <label for="exampleFormControlTextarea1" class="form-label"><b>Новый пост</b></label>
                 <textarea name="post-text" class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
             </div>
-            <button type="submit" id="1" name="post" value="" class="button">Опубликовать</button>
+            <button type="submit" name="post" value="" class="button">Опубликовать</button>
         </form>
         <c:forEach items="${posts}" var="post">
             <div class="post">
@@ -37,6 +37,8 @@
                         </div>
                         <button type="submit" name="save" value="${post.title}${post.text}" class="button">Save</button>
                     </c:if>
+                    <t:comments post="${post}">
+                    </t:comments>
                 </form>
             </div>
         </c:forEach>

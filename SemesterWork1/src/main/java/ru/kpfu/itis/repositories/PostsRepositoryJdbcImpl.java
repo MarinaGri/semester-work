@@ -19,7 +19,7 @@ public class PostsRepositoryJdbcImpl implements PostsRepository{
     private final String SQL_SELECT_BY_ACCOUNT_ID = "select * from post where account_id = ?";
 
     //language=SQL
-    private final String SQL_DELETE_BY_ID = "delete from post where id = ?";
+    private final String SQL_DELETE_BY_ID = "delete from post cascade where id = ?";
 
     //language=SQL
     private final String SQL_COUNT_BY_ACCOUNT_ID = "select count(id) as count from post where account_id = ?";

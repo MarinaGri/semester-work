@@ -85,7 +85,7 @@ public class SearchServlet extends HttpServlet {
         } catch (LoadingDataException | RemovalFailedException | SavingFailedException ex) {
             ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "search");
         }
-        doGet(request, response);
+        response.sendRedirect(request.getContextPath() + "/search");
     }
 
     private void setDictionaries(HttpServletRequest request) throws LoadingDataException {
@@ -118,7 +118,7 @@ public class SearchServlet extends HttpServlet {
             request.setAttribute("experienceVal", vacancy.getExperience());
             request.setAttribute("employmentVal", vacancy.getEmployment());
             request.setAttribute("scheduleVal", vacancy.getSchedule());
-            request.setAttribute("onlyWithSalaryVal", vacancy.getOnlyWithSalary());
+            request.setAttribute("onlyWithSalaryVal", vacancy.isOnlyWithSalary());
         }
     }
 
