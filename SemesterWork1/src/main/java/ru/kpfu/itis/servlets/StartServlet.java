@@ -11,6 +11,6 @@ import java.io.IOException;
 public class StartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/WEB-INF/jsp/signUp.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/signUp");
     }
 }
