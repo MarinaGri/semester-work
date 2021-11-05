@@ -39,8 +39,13 @@ public class ProfileServlet extends HttpServlet {
         if(isOwnProfile(request, response)) {
             HttpSession session = request.getSession(false);
             Account account = (Account) session.getAttribute("account");
-            setProfileData(request, response, account);
-            request.getRequestDispatcher("WEB-INF/jsp/posts.jsp").forward(request, response);
+            if(account != null) {
+                setProfileData(request, response, account);
+                request.getRequestDispatcher("WEB-INF/jsp/posts.jsp").forward(request, response);
+            } else {
+                response.sendRedirect(request.getContextPath() + "/signUp");
+            }
+
         } else {
             response.sendRedirect(request.getContextPath() + "/anotherProfile?user=" + request.getParameter("user"));
         }
