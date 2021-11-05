@@ -2,7 +2,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <t:signXx title="Sing up page" >
-    <form method="POST" action="">
+    <form method="POST" action="<c:url value='/signUp'/>">
         <t:input name="firstName" value="${firstName}" innerText="First name" type="text" nameTip="${nameTip}">
         </t:input>
         <t:input name="lastName" value="${lastName}" innerText="Last name" type="text" nameTip="${nameTip}">
