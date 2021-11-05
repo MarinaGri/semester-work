@@ -32,3 +32,7 @@ create table subscription(
      foreign key (account_id) references account (id) on delete cascade,
      primary key (subscriber_id, account_id)
 );
+
+-- password: Qqqq1
+insert into account(first_name, last_name, email, password)
+values  ('Ivan', 'Ivanov', 'ivanov@gmail.com', '$2a$10$j.I8iYMhrvPFEo/tk9nAPewuFrgLhpN2eLPuHDjsq6rM/rIk8ehRG')
