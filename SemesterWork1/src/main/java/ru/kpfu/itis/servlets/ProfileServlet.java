@@ -97,34 +97,14 @@ public class ProfileServlet extends HttpServlet {
             Comment comment = new Comment(request.getParameter("comment"), account.getId(),null, id);
             try {
                 publicationService.postComment(comment);
+                response.sendRedirect(request.getContextPath() + "/profile?user=" + account.getId());
+                return;
             } catch (SavingFailedException ex) {
                 ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "error");
             }
         }
 
-        if(request.getParameter("edit") != null) {
-            request.setAttribute("edit", request.getParameter("postEdit"));
-        } else
-            try {
-                if (request.getParameter("save") != null) {
-                    Integer id = Integer.valueOf(request.getParameter("postEdit"));
-                    post.setId(id);
-                    publicationService.updatePost(post);
-                    request.setAttribute("edit", null);
-                } else if (request.getParameter("delete") != null) {
-                    Integer id = Integer.valueOf(request.getParameter("postEdit"));
-                    post.setId(id);
-                    publicationService.deletePost(post);
-                } else if (request.getParameter("post") != null) {
-                    publicationService.savePost(post);
-                    setProfileData(request, response, account);
-                    response.sendRedirect(request.getContextPath() + "/profile?user=" + account.getId());
-                    return;
-                }
-            } catch (RemovalFailedException | LoadingDataException | SavingFailedException ex) {
-                ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "profile");
-            }
-        response.sendRedirect(request.getContextPath() + "/profile?user=" + account.getId());
+        editPost(request, response, post, account);
     }
 
     private  void setProfileData(HttpServletRequest request, HttpServletResponse response,
@@ -148,6 +128,34 @@ public class ProfileServlet extends HttpServlet {
         } catch (LoadingDataException ex) {
             ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "profile");
         }
+    }
+
+    private void editPost(HttpServletRequest request, HttpServletResponse response, Post post, Account account) throws IOException, ServletException {
+        if(request.getParameter("edit") != null) {
+            request.setAttribute("edit", request.getParameter("postEdit"));
+        } else
+            try {
+                if (request.getParameter("save") != null) {
+                    Integer id = Integer.valueOf(request.getParameter("postEdit"));
+                    post.setId(id);
+                    publicationService.updatePost(post);
+                    request.setAttribute("edit", null);
+                    response.sendRedirect(request.getContextPath() + "/profile?user=" + account.getId());
+                    return;
+                } else if (request.getParameter("delete") != null) {
+                    Integer id = Integer.valueOf(request.getParameter("postEdit"));
+                    post.setId(id);
+                    publicationService.deletePost(post);
+                } else if (request.getParameter("post") != null) {
+                    publicationService.savePost(post);
+                    setProfileData(request, response, account);
+                    response.sendRedirect(request.getContextPath() + "/profile?user=" + account.getId());
+                    return;
+                }
+            } catch (RemovalFailedException | LoadingDataException | SavingFailedException ex) {
+                ShowErrorHelper.showErrorMessage(request, response, ex.getMessage(), "profile");
+            }
+        doGet(request, response);
     }
 }
 

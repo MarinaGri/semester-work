@@ -52,7 +52,6 @@ public class OAuthService {
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
             Gson gson = new Gson();
             JsonObject dictionariesData = gson.fromJson(reader, JsonObject.class);
-            System.out.println(dictionariesData);
             String firstName = dictionariesData.get("first_name").getAsString();
             String lastName = dictionariesData.get("last_name").getAsString();
             String email = dictionariesData.get("login").getAsString() + "@yandex.ru";

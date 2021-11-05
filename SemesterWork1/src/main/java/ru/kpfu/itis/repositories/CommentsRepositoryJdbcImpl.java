@@ -62,7 +62,6 @@ public class CommentsRepositoryJdbcImpl implements CommentsRepository{
 
     @Override
     public void update(Comment comment) throws DbException {
-        System.out.println(comment);
         simpleJdbcTemplate.update(SQL_UPDATE, comment.getText(),
                 comment.getAccountId(), comment.getNumVacancy(), comment.getPostId(), comment.getId());
     }

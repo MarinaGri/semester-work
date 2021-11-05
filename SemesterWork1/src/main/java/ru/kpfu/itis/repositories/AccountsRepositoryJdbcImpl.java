@@ -95,7 +95,6 @@ public class AccountsRepositoryJdbcImpl implements AccountsRepository {
     public Optional<Account> findById(Integer id) throws DbException {
         List<Account> accounts = simpleJdbcTemplate.query(SQL_SELECT_BY_ID, rowMapper, id);
         if(accounts.size() != 0){
-            System.out.println(accounts.get(0));
             return Optional.of(accounts.get(0));
         }
         return Optional.empty();
